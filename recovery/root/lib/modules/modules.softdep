@@ -1,0 +1,2 @@
+# Soft dependencies extracted from modules themselves.
+softdep mt6789_dcm pre:mtk_dcm.ko
