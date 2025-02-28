@@ -94,7 +94,7 @@ TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.vibrator-V1-ndk_platform.so \
 
-TW_LOAD_VENDOR_MODULES := "flashlight.ko flashlights-led191.ko"
+TW_LOAD_VENDOR_MODULES := "flashlight.ko flashlights-mt6789-o7.ko"
 
 # Vendor ramdisk
 PRODUCT_COPY_FILES += \

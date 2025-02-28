@@ -89,7 +89,7 @@ service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
     oneshot
     seclabel u:r:recovery:s0
 
-service keymint-beanpod /vendor/bin/hw/android.hardware.security.keymint@1.0-service.beanpod
+service keymint-mitee /vendor/bin/hw/android.hardware.security.keymint@1.0-service.mitee
     interface android.hardware.keymaster@4.0::IKeymasterDevice default
     interface android.hardware.keymaster@4.1::IKeymasterDevice default
     user root
@@ -122,35 +122,40 @@ on property:sys.usb.ffs.ready=1
     start mountfix
 
 on property:hwservicemanager.ready=true
-    start teei_daemon
+    start vendor.mrmd
     start gatekeeper-1-0
-    start keymint-beanpod
+    start keymint-mitee
     start keymaster
+    start miteelog
     
     
 on property:vendor.sys.listener.registered=true
-    start teei_daemon
+    start vendor.mrmd
     start gatekeeper-1-0
-    start keymint-beanpod
+    start keymint-mitee
     start keymaster
+    start miteelog
    
 on property:ro.crypto.state=unsupported
-    stop teei_daemon
-    stop keymint-beanpod
+    stop vendor.mrmd
+    stop keymint-mitee
     stop gatekeeper-1-0
     stop keymaster-4-1
+    stop miteelog
 
 on property:ro.crypto.state=unencrypted
-    stop teei_daemon
-    stop keymint-beanpod
+    stop vendor.mrmd
+    stop keymint-mitee
     stop gatekeeper-1-0
     stop keymaster
+    stop miteelog
     
 on property:twrp.all.users.decrypted=true
-    stop teei_daemon
-    stop keymint-beanpod
+    stop vendor.mrmd
+    stop keymint-mitee
     stop gatekeeper-1-0
     stop keymaster
+    stop miteelog
 
 on boot
     start health-hal-2-1
