@@ -12,7 +12,7 @@ on init
     setprop sys.usb.ffs.aio_compat 1
     setprop crypto.ready 1
 
-# For vibrator
+# For Vibrator
     write /sys/class/leds/vibrator/trigger "transient"
     chown system system /sys/class/leds/vibrator/trigger
     chown system system /sys/class/leds/vibrator/activate
@@ -20,7 +20,7 @@ on init
     chown system system /sys/class/leds/vibrator/duration
     chown system system /sys/class/leds/vibrator/state
 
-#flashlight
+# Flashlight
     chown system system /sys/class/leds/flashlight/trigger
     chown system system /sys/class/leds/flashlight/brightness
     chown system system /sys/class/leds/flashlight/max_brightness

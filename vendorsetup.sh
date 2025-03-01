@@ -18,7 +18,7 @@
 # 	Please maintain this if you use this script or any part of it
 #
 FDEVICE="tanzanite"
-#set -o xtrace
+# set -o xtrace
 
 fox_get_target_device() {
 local chkdev=$(echo "$BASH_SOURCE" | grep -w $FDEVICE)
@@ -38,7 +38,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export LC_ALL="C.UTF-8"
  	export ALLOW_MISSING_DEPENDENCIES=true
 
- 	#OFR build settings & info
+ 	# OFR build settings & info
 	export TARGET_DEVICE_ALT="tanzanite"
 	export FOX_RECOVERY_SYSTEM_PARTITION="/dev/block/mapper/system"
 	export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"
@@ -50,7 +50,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     export FOX_SETTINGS_ROOT_DIRECTORY=/persist/OFRP
     export FOX_RESET_SETTINGS=1
 
-    #OFR binary files
+    # OFR binary files
     export FOX_USE_BASH_SHELL=1
     export FOX_USE_NANO_EDITOR=1
     export FOX_USE_TAR_BINARY=1
@@ -59,12 +59,12 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     export FOX_ASH_IS_BASH=1
     export OF_ENABLE_LPTOOLS=1
 
-    #OTA
+    # OTA
     export FOX_AB_DEVICE=1
     export FOX_VIRTUAL_AB_DEVICE=1
     export OF_SUPPORT_VBMETA_AVB2_PATCHING=1
 
-    #Flashlight
+    # Flashlight
     export OF_FL_PATH1=/sys/class/leds/flashlight/brightness
     export OF_FL_PATH2=/sys/class/leds/torch-light0/brightness
 

@@ -1,17 +1,17 @@
 #!/sbin/sh
 
-# Если modules.img есть только в ksu
+# If modules.img is only in KSU
 if [ -f "/data/adb/ksu/modules.img" ] && [ ! -f "/data/adb/ap/modules.img" ]; then
   e2fsck -fy /data/adb/ksu/modules.img
   resize2fs -M /data/adb/ksu/modules.img
   mount -t auto -o loop /data/adb/ksu/modules.img /data/adb/modules
 
-# Если modules.img есть в ap
+# If modules.img is in AP
 elif [ -f "/data/adb/ap/modules.img" ] && [ ! -f "/data/adb/ksu/modules.img" ]; then
   e2fsck -fy /data/adb/ap/modules.img
   mount -t auto -o loop /data/adb/ap/modules.img /data/adb/modules
 
-# Если modules.img есть и в ksu и в ap
+# If modules.img is in both KSU and AP
 elif [ -f "/data/adb/ksu/modules.img" ] && [ -f "/data/adb/ap/modules.img" ]; then
 
   mkdir /data/adb/ksu-modules
@@ -23,7 +23,7 @@ elif [ -f "/data/adb/ksu/modules.img" ] && [ -f "/data/adb/ap/modules.img" ]; th
   mount -t auto -o loop /data/adb/ksu/modules.img /data/adb/ksu-modules
   mount -t auto -o loop /data/adb/ap/modules.img /data/adb/ap-modules
 
-  # Модуль для удаления папок (допустим так, но наверно можно как то и получше)
+  # Module for deleting folders (let's say so, but maybe it can be done better)
   mkdir /data/adb/ksu-modules/ModulesTemp
   mkdir /data/adb/ap-modules/ModulesTemp
 
