@@ -1,4 +1,4 @@
- #
+#
 #	This file is part of the OrangeFox Recovery Project
 # 	Copyright (C) 2020-2024 The OrangeFox Recovery Project
 #
@@ -60,7 +60,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     export OF_ENABLE_LPTOOLS=1
 
     #OTA
-	 export FOX_AB_DEVICE=1
+    export FOX_AB_DEVICE=1
     export FOX_VIRTUAL_AB_DEVICE=1
     export OF_SUPPORT_VBMETA_AVB2_PATCHING=1
 
