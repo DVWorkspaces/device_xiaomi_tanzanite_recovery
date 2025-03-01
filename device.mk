@@ -82,6 +82,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     mtk_plpath_utils.recovery
 
+# Keystore Hal
+PRODUCT_PACKAGES += \
+    android.system.keystore2
+
 # Keymaster
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.1
