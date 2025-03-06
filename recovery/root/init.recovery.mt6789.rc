@@ -1,4 +1,4 @@
-import /init.microtrust.rc
+import /init.recovery.mitee.rc
 
 on init
     # Create a more standard /dev/block layout for our scripts
@@ -71,13 +71,6 @@ on boot
     chmod 0664 /dev/xiaomi-touch
     chown system system /sys/class/touch/tp_dev/fod_status
     chmod 0664 /sys/class/touch/tp_dev/fod_status
-
-service touchfeature-hal-1-0 /vendor/bin/hw/vendor.xiaomi.hardware.touchfeature@1.0-service
-    class main
-    user root
-    group root
-    onrestart restart touchfeature-hal-1-0
-    seclabel u:r:recovery:s0
     
     
 service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
@@ -121,40 +114,28 @@ on property:sys.usb.ffs.ready=1
     start mountfix
 
 on property:hwservicemanager.ready=true
-    start vendor.mrmd
-    start gatekeeper-1-0
-    start keymint-mitee
-    start keymaster
     start miteelog
-    
-    
-on property:vendor.sys.listener.registered=true
-    start vendor.mrmd
-    start gatekeeper-1-0
+    start tee-supplicant
     start keymint-mitee
-    start keymaster
-    start miteelog
-   
-on property:ro.crypto.state=unsupported
-    stop vendor.mrmd
-    stop keymint-mitee
-    stop gatekeeper-1-0
-    stop keymaster-4-1
-    stop miteelog
+    start gatekeeper-1-0
 
-on property:ro.crypto.state=unencrypted
-    stop vendor.mrmd
+on property:ro.crypto.state=unsupported
+    stop miteelog
+    stop tee-supplicant
     stop keymint-mitee
     stop gatekeeper-1-0
-    stop keymaster
-    stop miteelog
     
-on property:twrp.all.users.decrypted=true
-    stop vendor.mrmd
+on property:ro.crypto.state=unencrypted
+    stop miteelog
+    stop tee-supplicant
     stop keymint-mitee
     stop gatekeeper-1-0
-    stop keymaster
+
+on property:twrp.all.users.decrypted=true
     stop miteelog
+    stop tee-supplicant
+    stop keymint-mitee
+    stop gatekeeper-1-0
 
 on boot
     start health-hal-2-1

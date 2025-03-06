@@ -31,31 +31,45 @@
         manifest_displayfeature.xml
 -->
 <manifest version="4.0" type="device" target-level="6">
-    <hal format="aidl">
-        <name>android.hardware.security.keymint</name>
-        <fqname>IKeyMintDevice/default</fqname>
+    <hal format="hidl">
+        <name>android.hardware.audio</name>
+        <transport>hwbinder</transport>
+        <version>7.0</version>
+        <interface>
+            <name>IDevicesFactory</name>
+            <instance>default</instance>
+        </interface>
+        <fqname>@7.0::IDevicesFactory/default</fqname>
     </hal>
-    <hal format="aidl">
-        <name>android.hardware.security.keymint</name>
-        <fqname>IRemotelyProvisionedComponent/default</fqname>
+    <hal format="hidl">
+        <name>android.hardware.audio.effect</name>
+        <transport>hwbinder</transport>
+        <version>7.0</version>
+        <interface>
+            <name>IEffectsFactory</name>
+            <instance>default</instance>
+        </interface>
+        <fqname>@7.0::IEffectsFactory/default</fqname>
     </hal>
-    <hal format="aidl">
-    	<name>android.hardware.security.secureclock</name>
-    	<fqname>ISecureClock/default</fqname>
+    <hal format="hidl">
+        <name>android.hardware.bluetooth</name>
+        <transport>hwbinder</transport>
+        <version>1.1</version>
+        <interface>
+            <name>IBluetoothHci</name>
+            <instance>default</instance>
+        </interface>
+        <fqname>@1.1::IBluetoothHci/default</fqname>
     </hal>
-    <hal format="aidl">
-    	<name>android.hardware.security.sharedsecret</name>
-    	<fqname>ISharedSecret/default</fqname>
-    </hal>
-    <hal format="aidl">
-        <name>android.hardware.vibrator</name>
-        <version>2</version>
-        <fqname>IVibrator/default</fqname>
-    </hal>
-    <hal format="aidl">
-        <name>android.hardware.vibrator</name>
-        <version>2</version>
-        <fqname>IVibratorManager/default</fqname>
+    <hal format="hidl">
+        <name>android.hardware.bluetooth.audio</name>
+        <transport>hwbinder</transport>
+        <version>2.1</version>
+        <interface>
+            <name>IBluetoothAudioProvidersFactory</name>
+            <instance>default</instance>
+        </interface>
+        <fqname>@2.1::IBluetoothAudioProvidersFactory/default</fqname>
     </hal>
     <hal format="hidl">
         <name>android.hardware.boot</name>
