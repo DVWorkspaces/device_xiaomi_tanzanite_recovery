@@ -17,25 +17,19 @@
 # Only the below variable(s) need to be changed!
 #
 
-# Define hardware platform
-PRODUCT_RELEASE_NAME := tanzanite
-
-# Device path for OEM device tree
-DEVICE_PATH := device/xiaomi/$(PRODUCT_RELEASE_NAME)
-
 # Inherit from hardware-specific part of the product configuration
-$(call inherit-product, $(DEVICE_PATH)/device.mk)
+$(call inherit-product, device/xiaomi/tanzanite/device.mk)
 
 # Inherit any OrangeFox-specific settings
-$(call inherit-product-if-exists, $(DEVICE_PATH)/fox_$(PRODUCT_RELEASE_NAME).mk)
+$(call inherit-product-if-exists, device/xiaomi/tanzanite/fox_tanzanite.mk)
 
 # Inherit some common TWRP stuff.
 $(call inherit-product, vendor/twrp/config/common.mk)
 
-
 ## Device identifier. This must come after all inclusions
-PRODUCT_DEVICE := $(PRODUCT_RELEASE_NAME)
-PRODUCT_NAME := twrp_$(PRODUCT_RELEASE_NAME)
-PRODUCT_BRAND := Xiaomi
+PRODUCT_DEVICE := tanzanite
+PRODUCT_NAME := twrp_tanzanite
+PRODUCT_BRAND := Redmi
 PRODUCT_MODEL := Redmi Note 14 4G
+PRODUCT_PLATFORM := mt6789
 PRODUCT_MANUFACTURER := Xiaomi
