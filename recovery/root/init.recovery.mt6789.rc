@@ -1,11 +1,6 @@
-import /init.microtrust.rc
+import /init.mitee.rc
 
 on init
-    # Create a more standard /dev/block layout for our scripts
-    symlink /dev/block/platform/bootdevice /dev/block/bootdevice
-    mkdir /persist 0700 root root
-    mount ext4 /dev/block/by-name/persist /persist
-    mkdir /persist/OFRP
     export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
     setprop sys.usb.configfs 1
     setprop sys.usb.controller "musb-hdrc"
@@ -28,58 +23,45 @@ on init
     chown system system /sys/class/leds/torch-light0/trigger
     chown system system /sys/class/leds/torch-light0/brightness
     chown system system /sys/class/leds/torch-light0/max_brightness
-    
+
 on fs
     install_keyring
 
+# We need vold early for metadata encryption
+on early-fs
+    start vold
+
+on late-fs
+    # Mount RW partitions which need run fsck
+    mount_all /first_stage_ramdisk/fstab.mt6789 --late
+
 on post-fs
-   start boot-hal-1-2
+    start boot-hal-1-2
+
+    # Support A/B feature for EMMC and UFS boot region
+    wait /dev/block/mmcblk0boot0 2
+    symlink /dev/block/sda /dev/block/mmcblk0boot0
+    symlink /dev/block/sdb /dev/block/mmcblk0boot1
+    symlink /dev/block/mmcblk0boot0 /dev/block/platform/bootdevice/by-name/preloader_a
+    symlink /dev/block/mmcblk0boot1 /dev/block/platform/bootdevice/by-name/preloader_b
+
+    # Support A/B feature for combo emmc and ufs OTA update
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/platform/bootdevice/by-name/preloader_emmc_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/platform/bootdevice/by-name/preloader_emmc_b
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/platform/bootdevice/by-name/preloader_ufs_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/platform/bootdevice/by-name/preloader_ufs_b
+
+    # Support A/B feature for combo emmc and ufs OTA update
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/by-name/preloader_emmc_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/by-name/preloader_emmc_b
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/by-name/preloader_ufs_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/by-name/preloader_ufs_b
+
+    symlink /dev/block/platform/bootdevice /dev/block/bootdevice
+
     exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
     start mtk.plpath.utils.link
 
-    on property:persist.vendor.mtk.pl_lnk=1
-    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
-    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
-    symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
-    symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
-
-# FSTAB_RAW2(lk2,bootloader2) of fstab.in.emmc, but without bootloader2 mount point
-    symlink /dev/block/by-name/lk1 /dev/block/by-name/bootloader1
-    symlink /dev/block/by-name/lk2 /dev/block/by-name/bootloader2
-
-# Fix ro.vendor.mtk_ufs_support remove issue of recovery mode
-on property:vendor.mtk.boot0_linka=1
-    symlink /dev/block/sda /dev/block/mmcblk0boot0
-
-on property:vendor.mtk.boot0_linkb=1
-    symlink /dev/block/sdb /dev/block/mmcblk0boot0
-
-on property:vendor.mtk.boot0_linkc=1
-    symlink /dev/block/sdc /dev/block/mmcblk0boot0
-
-on property:vendor.mtk.boot1_linka=1
-    symlink /dev/block/sda /dev/block/mmcblk0boot1
-
-on property:vendor.mtk.boot1_linkb=1
-    symlink /dev/block/sdb /dev/block/mmcblk0boot1
-
-on property:vendor.mtk.boot1_linkc=1
-    symlink /dev/block/sdc /dev/block/mmcblk0boot1
-    
-on boot
-    chown system system /dev/xiaomi-touch
-    chmod 0664 /dev/xiaomi-touch
-    chown system system /sys/class/touch/tp_dev/fod_status
-    chmod 0664 /sys/class/touch/tp_dev/fod_status
-
-service touchfeature-hal-1-0 /vendor/bin/hw/vendor.xiaomi.hardware.touchfeature@1.0-service
-    class main
-    user root
-    group root
-    onrestart restart touchfeature-hal-1-0
-    seclabel u:r:recovery:s0
-    
-    
 service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
     class main
     user root
@@ -88,86 +70,55 @@ service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
     oneshot
     seclabel u:r:recovery:s0
 
-service keymint-mitee /vendor/bin/hw/android.hardware.security.keymint@1.0-service.mitee
-    interface android.hardware.keymaster@4.0::IKeymasterDevice default
-    interface android.hardware.keymaster@4.1::IKeymasterDevice default
-    user root
-    group root drmrpc
-    disabled
-    oneshot
-    seclabel u:r:recovery:s0
-
-service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     interface android.hardware.gatekeeper@1.0::IGatekeeper default
-    user root
-    group root
-    disabled
-    seclabel u:r:recovery:s0
-
-service vendor.vibrator-default /vendor/bin/hw/android.hardware.vibrator-service.mediatek
     class hal
     user root
-    group root system
-    seclabel u:r:recovery:s0
-
-service mountfix /sbin/sh /system/bin/mount.sh
-    user root
     group root
-    oneshot
     disabled
     seclabel u:r:recovery:s0
-    
-on property:sys.usb.ffs.ready=1
-    start mountfix
+
+service vendor.keymint-mitee /vendor/bin/hw/android.hardware.security.keymint@1.0-service.mitee
+	class early_hal
+	user root
+	group root drmrpc
+	disabled
+	seclabel u:r:recovery:s0
+
+on property:crypto.ready=1
+    start vendor.keymint-mitee
 
 on property:hwservicemanager.ready=true
-    start vendor.mrmd
-    start gatekeeper-1-0
-    start keymint-mitee
-    start keymaster
-    start miteelog
-    
-    
-on property:vendor.sys.listener.registered=true
-    start vendor.mrmd
-    start gatekeeper-1-0
-    start keymint-mitee
-    start keymaster
-    start miteelog
-   
+    start vendor.keymint-mitee
+    start vendor.gatekeeper-1-0
+
 on property:ro.crypto.state=unsupported
-    stop vendor.mrmd
-    stop keymint-mitee
-    stop gatekeeper-1-0
-    stop keymaster-4-1
+    stop vendor.keymint-mitee
+    stop vendor.gatekeeper-1-0
+    stop tee-supplicant
+    stop miteelog
+    
+on property:ro.crypto.state=unencrypted
+    stop vendor.keymint-mitee
+    stop vendor.gatekeeper-1-0
+    stop tee-supplicant
     stop miteelog
 
-on property:ro.crypto.state=unencrypted
-    stop vendor.mrmd
-    stop keymint-mitee
-    stop gatekeeper-1-0
-    stop keymaster
+on property:twrp.decrypt.done=true
+    stop vendor.keymint-mitee
+    stop vendor.gatekeeper-1-0
+    stop tee-supplicant
     stop miteelog
     
-on property:twrp.all.users.decrypted=true
-    stop vendor.mrmd
-    stop keymint-mitee
-    stop gatekeeper-1-0
-    stop keymaster
+
+on property:crypto.ready=0
+    stop vendor.keymint-mitee
+    stop vendor.gatekeeper-1-0
+    stop tee-supplicant
     stop miteelog
+
+on property:twrp.modules.loaded=true
+    start haptic_hal
 
 on boot
     start health-hal-2-1
-    start vendor.vibrator-default
-    setprop sys.usb.config adb
-
-
-service modules_mount /system/bin/modules_mount.sh
-    user root
-    group root
-    disabled
-    oneshot
-    seclabel u:r:recovery:s0
-
-on property:twrp.decrypt.done=true
-    start modules_mount
