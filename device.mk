@@ -59,7 +59,7 @@ AB_OTA_PARTITIONS += \
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
     POSTINSTALL_PATH_system=system/bin/otapreopt_script \
-    FILESYSTEM_TYPE_system=erofs \
+    FILESYSTEM_TYPE_system=ext4 \
     POSTINSTALL_OPTIONAL_system=true
 
 # VNDK
@@ -109,7 +109,7 @@ TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.keymaster@4.1 \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.vibrator-V1-ndk_platform.so \
 
-TW_LOAD_VENDOR_MODULES := "flashlight.ko flashlights-mt6789-o7.ko"
+TW_LOAD_VENDOR_MODULES := "flashlights-mt6789-o7.ko ft3519t.ko"
 
 # Vendor ramdisk
 PRODUCT_COPY_FILES += \
