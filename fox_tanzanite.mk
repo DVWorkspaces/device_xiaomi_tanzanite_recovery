@@ -44,4 +44,4 @@ OF_NO_TREBLE_COMPATIBILITY_CHECK := 1
 OF_SUPPORT_VBMETA_AVB2_PATCHING := 1
 
 # Maintainer specific settings
-OF_MAINTAINER := picasso09
+OF_MAINTAINER := ambacor88
