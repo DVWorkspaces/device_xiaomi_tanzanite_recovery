@@ -7,6 +7,23 @@ on init
     setprop sys.usb.ffs.aio_compat 1
     setprop crypto.ready 1
 
+# For flashlight
+    chown system system /sys/class/leds/flashlight/trigger
+    chown system system /sys/class/leds/flashlight/brightness
+    chown system system /sys/class/leds/flashlight/max_brightness
+
+    chown system system /sys/class/leds/torch-light0/trigger
+    chown system system /sys/class/leds/torch-light0/brightness
+    chown system system /sys/class/leds/torch-light0/max_brightness
+
+# For vibrator
+    write /sys/class/leds/vibrator/trigger "transient"
+    chown system system /sys/class/leds/vibrator/trigger
+    chown system system /sys/class/leds/vibrator/activate
+    chown system system /sys/class/leds/vibrator/brightness
+    chown system system /sys/class/leds/vibrator/duration
+    chown system system /sys/class/leds/vibrator/state
+
 on fs
     install_keyring
 
@@ -66,13 +83,6 @@ service vendor.keymint-mitee /vendor/bin/hw/android.hardware.security.keymint@1.
     disabled
     seclabel u:r:recovery:s0
 
-service vendor.light-service /vendor/bin/hw/android.hardware.lights-service.mediatek
-    class hal
-    user root
-    group root
-    disabled
-    seclabel u:r:recovery:s0
-
 service vendor.vibrator-service /vendor/bin/hw/android.hardware.vibrator-service.mediatek
     class hal
     user root
@@ -114,24 +124,4 @@ on property:crypto.ready=0
 
 on boot
     start health-hal-2-1
-
-    # For vibrator
-    write /sys/class/leds/vibrator/trigger "transient"
-    chown system system /sys/class/leds/vibrator/trigger
-    chown system system /sys/class/leds/vibrator/activate
-    chown system system /sys/class/leds/vibrator/brightness
-    chown system system /sys/class/leds/vibrator/duration
-    chown system system /sys/class/leds/vibrator/state
-
     start vendor.vibrator-service
-
-    # For flashlight
-    chown system system /sys/class/leds/flashlight/trigger
-    chown system system /sys/class/leds/flashlight/brightness
-    chown system system /sys/class/leds/flashlight/max_brightness
-
-    chown system system /sys/class/leds/torch-light0/trigger
-    chown system system /sys/class/leds/torch-light0/brightness
-    chown system system /sys/class/leds/torch-light0/max_brightness
-
-    start vendor.light-service
