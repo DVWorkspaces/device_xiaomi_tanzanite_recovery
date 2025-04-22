@@ -5,7 +5,7 @@ export ALLOW_MISSING_DEPENDENCIES=true
 
 # OFR build settings & info
 export FOX_BUILD_DEVICE="tanzanite"
-export FOX_VERSION="R12.1-v1"
+export FOX_MAINTAINER_PATCH_VERSION="r1"
 export FOX_VARIANT="HyperOS"
 export FOX_BUILD_TYPE="Unofficial"
 export FOX_RECOVERY_SYSTEM_PARTITION="/dev/block/mapper/system"
