@@ -20,9 +20,6 @@
 # Inherit from hardware-specific part of the product configuration
 $(call inherit-product, device/xiaomi/tanzanite/device.mk)
 
-# Inherit any OrangeFox-specific settings
-$(call inherit-product-if-exists, device/xiaomi/tanzanite/fox_tanzanite.mk)
-
 # Inherit some common TWRP stuff.
 $(call inherit-product, vendor/twrp/config/common.mk)
 
